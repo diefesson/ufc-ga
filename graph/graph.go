@@ -1,40 +1,97 @@
 package graph
 
-type data interface{}
+import (
+	"container/list"
+)
 
-type Vertex struct {
-	Data data
+func SetVerticesData(g Graph, data Data) {
+	g.ForVertices(func(index int, vertex Vertex) { vertex.SetData(data) })
 }
 
-type Edge struct {
-	Connected bool
-	Data      data
+func SetEdgesData(g Graph, data Data) {
+	g.ForEdges(func(from, to int, edge Edge) { edge.SetData(data) })
 }
 
-type VertexProcessor func(index int, vertex *Vertex)
-
-type EdgeProcessor func(from, to int, edge *Edge)
-
-type Graph interface {
-	GetVertex(index int) *Vertex
-	GetEdge(from, to int) *Edge
-	Neighbours(index int) []int
-	ForVertices(VertexProcessor)
-	ForEdges(EdgeProcessor)
+func clearVisited(g Graph) {
+	g.ForVertices(func(index int, vertex Vertex) { vertex.setVisited(false) })
 }
 
-func GetConnection(g Graph, i, j int) bool {
-	return g.GetEdge(i, j).Connected
+func ForPresentVertices(g Graph, vp VertexProcessor) {
+	g.ForVertices(func(index int, vertex Vertex) {
+		if vertex.IsPresent() {
+			vp(index, vertex)
+		}
+	})
 }
 
-func SetConnection(g Graph, i, j int, connected bool) {
-	g.GetEdge(i, j).Connected = connected
+func ForConnectedEdges(g Graph, ep EdgeProcessor) {
+	g.ForEdges(func(from, to int, edge Edge) {
+		if edge.IsConnected() {
+			ep(from, to, edge)
+		}
+	})
 }
 
-func ClearVerticesData(g Graph) {
-	g.ForVertices(func(index int, vertex *Vertex) { vertex.Data = nil })
+func Neighbours(g Graph, index int) []int {
+	neighbours := make([]int, 0)
+	g.ForNeighbours(index, func(i int, vertex Vertex) { neighbours = append(neighbours, i) })
+	return neighbours
 }
 
-func ClearEdgesData(g Graph) {
-	g.ForEdges(func(from, to int, edge *Edge) { edge.Data = nil })
+func DepthFirst(g Graph, start int, vp VertexProcessor, ep EdgeProcessor) {
+	if vp == nil {
+		vp = emptyVertexProcessor
+	}
+	if ep == nil {
+		ep = emptyEdgeProcessor
+	}
+	clearVisited(g)
+	depthFirst(g, start, vp, ep)
+}
+
+func depthFirst(g Graph, index int, vp VertexProcessor, ep EdgeProcessor) {
+	vertex := g.GetVertex(index)
+	vertex.setVisited(true)
+	vp(index, vertex)
+	for _, i := range Neighbours(g, index) {
+		nextVertex := g.GetVertex(i)
+		if !nextVertex.isVisited() {
+			nextEdge := g.GetEdge(index, i)
+			ep(index, i, nextEdge)
+			depthFirst(g, i, vp, ep)
+		}
+	}
+}
+
+func BreadthFirst(g Graph, start int, vp VertexProcessor) {
+	if vp == nil {
+		vp = emptyVertexProcessor
+	}
+	clearVisited(g)
+	breadthFirst(g, start, vp)
+}
+
+func breadthFirst(g Graph, start int, vp VertexProcessor) {
+	nexts := list.New()
+	nexts.PushBack(start)
+	g.GetVertex(start).setVisited(true)
+	for e := nexts.Front(); e != nil; e = nexts.Front() {
+		index := e.Value.(int)
+		vertex := g.GetVertex(index)
+		nexts.Remove(e)
+		vp(index, vertex)
+		for _, i := range Neighbours(g, index) {
+			if !g.GetVertex(i).isVisited() {
+				g.GetVertex(i).setVisited(true)
+				nexts.PushBack(i)
+			}
+		}
+	}
+}
+
+func IsConnectedFrom(g Graph, start int) bool {
+	count := 0
+	counter := func(_ int, vertex Vertex) { count++ }
+	DepthFirst(g, start, counter, nil)
+	return count == g.Size()
 }

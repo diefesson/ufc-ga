@@ -1,64 +1,78 @@
 package graph
 
 type DiGraph struct {
-	vertices []Vertex
-	edges    [][]Edge
+	baseGraphImpl
+	edges [][]edgeImpl
 }
 
-func makeDiEdges(vertexCount int) [][]Edge {
-	edges := make([][]Edge, vertexCount)
+func makeDiEdges(vertexCount int) [][]edgeImpl {
+	edges := make([][]edgeImpl, vertexCount)
 	for i := 0; i < vertexCount; i++ {
-		edges[i] = make([]Edge, vertexCount)
+		edges[i] = make([]edgeImpl, vertexCount)
 	}
 	return edges
 }
 
-func NewDiGraph(size int) *DiGraph {
-	return &DiGraph{vertices: make([]Vertex, size), edges: makeDiEdges(size)}
+func NewDiGraph(capacity int) *DiGraph {
+	return &DiGraph{
+		makeBaseGraphImpl(capacity),
+		makeDiEdges(capacity),
+	}
 }
 
-func (g *DiGraph) GetVertex(index int) *Vertex {
-	return &g.vertices[index]
+func (g *DiGraph) Remove(index int) {
+	g.baseGraphImpl.Remove(index)
+	g.ForFrom(index, func(i int, vertex Vertex) { g.GetEdge(index, i).setConnected(false) })
+	g.ForTo(index, func(i int, vertex Vertex) { g.GetEdge(i, index).setConnected(false) })
 }
 
-func (g *DiGraph) GetEdge(from, to int) *Edge {
+func (g *DiGraph) Connect(from, to int) {
+	g.baseGraphImpl.Add(from)
+	g.baseGraphImpl.Add(to)
+	g.GetEdge(from, to).setConnected(true)
+}
+
+func (g *DiGraph) Disconnect(from, to int) {
+	g.GetEdge(from, to).setConnected(false)
+}
+
+func (g *DiGraph) GetEdge(from, to int) Edge {
 	return &g.edges[from][to]
 }
 
-func (g *DiGraph) From(index int) []int {
-	from := make([]int, 0)
-	for i := 0; i < len(g.edges); i++ {
-		if GetConnection(g, index, i) {
-			from = append(from, i)
+func (g *DiGraph) ForFrom(index int, vp VertexProcessor) {
+	for i := 0; i < g.Capacity(); i++ {
+		if g.GetEdge(index, i).IsConnected() {
+			vp(i, g.GetVertex(i))
 		}
 	}
-	return from
 }
 
-func (g *DiGraph) To(index int) []int {
-	to := make([]int, 0)
-	for i := 0; i < len(g.edges); i++ {
-		if GetConnection(g, i, index) {
-			to = append(to, i)
+func (g *DiGraph) ForNeighbours(index int, vp VertexProcessor) {
+	g.ForFrom(index, vp)
+}
+
+func (g *DiGraph) ForTo(index int, vp VertexProcessor) {
+	for i := 0; i < g.Capacity(); i++ {
+		if g.GetEdge(i, index).IsConnected() {
+			vp(i, g.GetVertex(i))
 		}
-	}
-	return to
-}
-
-func (g *DiGraph) Neighbours(index int) []int {
-	return g.From(index)
-}
-
-func (g *DiGraph) ForVertices(f VertexProcessor) {
-	for i := 0; i < len(g.vertices); i++ {
-		f(i, g.GetVertex(i))
 	}
 }
 
 func (g *DiGraph) ForEdges(f EdgeProcessor) {
-	for i := 0; i < len(g.vertices); i++ {
-		for j := 0; j < len(g.vertices); j++ {
+	for i := 0; i < g.Capacity(); i++ {
+		for j := 0; j < g.Capacity(); j++ {
 			f(i, j, g.GetEdge(i, j))
 		}
 	}
+}
+
+func (g *DiGraph) VerifyConnected() bool {
+	for i := 0; i < g.Capacity(); i++ {
+		if g.GetVertex(i).IsPresent() && !IsConnectedFrom(g, i) {
+			return false
+		}
+	}
+	return true
 }
