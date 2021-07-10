@@ -4,37 +4,29 @@ import (
 	"container/list"
 )
 
-func SetVerticesData(g Graph, data Data) {
-	g.ForVertices(func(index int, vertex Vertex) { vertex.SetData(data) })
-}
-
-func SetEdgesData(g Graph, data Data) {
-	g.ForEdges(func(from, to int, edge Edge) { edge.SetData(data) })
-}
-
 func clearVisited(g Graph) {
-	g.ForVertices(func(index int, vertex Vertex) { vertex.setVisited(false) })
+	g.ForVertices(func(index int) { g.setVisited(index, false) })
 }
 
 func ForPresentVertices(g Graph, vp VertexProcessor) {
-	g.ForVertices(func(index int, vertex Vertex) {
-		if vertex.IsPresent() {
-			vp(index, vertex)
+	g.ForVertices(func(index int) {
+		if g.IsPresent(index) {
+			vp(index)
 		}
 	})
 }
 
 func ForConnectedEdges(g Graph, ep EdgeProcessor) {
-	g.ForEdges(func(from, to int, edge Edge) {
-		if edge.IsConnected() {
-			ep(from, to, edge)
+	g.ForEdges(func(from, to int) {
+		if g.IsConnected(from, to) {
+			ep(from, to)
 		}
 	})
 }
 
 func Neighbours(g Graph, index int) []int {
 	neighbours := make([]int, 0)
-	g.ForNeighbours(index, func(i int, vertex Vertex) { neighbours = append(neighbours, i) })
+	g.ForNeighbours(index, func(i int) { neighbours = append(neighbours, i) })
 	return neighbours
 }
 
@@ -50,14 +42,11 @@ func DepthFirst(g Graph, start int, vp VertexProcessor, ep EdgeProcessor) {
 }
 
 func depthFirst(g Graph, index int, vp VertexProcessor, ep EdgeProcessor) {
-	vertex := g.GetVertex(index)
-	vertex.setVisited(true)
-	vp(index, vertex)
+	g.setVisited(index, true)
+	vp(index)
 	for _, i := range Neighbours(g, index) {
-		nextVertex := g.GetVertex(i)
-		if !nextVertex.isVisited() {
-			nextEdge := g.GetEdge(index, i)
-			ep(index, i, nextEdge)
+		if !g.isVisited(i) {
+			ep(index, i)
 			depthFirst(g, i, vp, ep)
 		}
 	}
@@ -74,15 +63,14 @@ func BreadthFirst(g Graph, start int, vp VertexProcessor) {
 func breadthFirst(g Graph, start int, vp VertexProcessor) {
 	nexts := list.New()
 	nexts.PushBack(start)
-	g.GetVertex(start).setVisited(true)
+	g.setVisited(start, true)
 	for e := nexts.Front(); e != nil; e = nexts.Front() {
 		index := e.Value.(int)
-		vertex := g.GetVertex(index)
 		nexts.Remove(e)
-		vp(index, vertex)
+		vp(index)
 		for _, i := range Neighbours(g, index) {
-			if !g.GetVertex(i).isVisited() {
-				g.GetVertex(i).setVisited(true)
+			if !g.isVisited(i) {
+				g.setVisited(i, true)
 				nexts.PushBack(i)
 			}
 		}
@@ -91,7 +79,7 @@ func breadthFirst(g Graph, start int, vp VertexProcessor) {
 
 func IsConnectedFrom(g Graph, start int) bool {
 	count := 0
-	counter := func(_ int, vertex Vertex) { count++ }
+	counter := func(_ int) { count++ }
 	DepthFirst(g, start, counter, nil)
-	return count == g.Size()
+	return count == g.VertexCount()
 }

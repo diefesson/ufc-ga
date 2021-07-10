@@ -2,44 +2,26 @@ package graph
 
 type Data interface{}
 
-type DataHolder interface {
-	Data() Data
-	SetData(data Data)
-}
-
-type Edge interface {
-	DataHolder
-	IsConnected() bool
-	setConnected(connected bool)
-}
-
-type Vertex interface {
-	DataHolder
-	IsPresent() bool
-	setPresent(present bool)
-	isVisited() bool
-	setVisited(visited bool)
-}
-
-type VertexProcessor func(index int, vertex Vertex)
-
-func emptyVertexProcessor(index int, vertex Vertex) {}
-
-type EdgeProcessor func(from, to int, edge Edge)
-
-func emptyEdgeProcessor(from, to int, edge Edge) {}
-
 type Graph interface {
 	Capacity() int
-	Size() int
-	GetVertex(index int) Vertex
+	VertexCount() int
+	EdgeCount() int
 	Add(index int)
+	IsPresent(index int) bool
 	Remove(index int)
-	GetEdge(from, to int) Edge
 	Connect(from, to int)
+	IsConnected(from, to int) bool
 	Disconnect(from, to int)
 	ForNeighbours(index int, vp VertexProcessor)
-	ForVertices(VertexProcessor)
-	ForEdges(EdgeProcessor)
+	ForVertices(vp VertexProcessor)
+	ForEdges(ep EdgeProcessor)
+	CreateVertexDataLayer(key string) *UDDataLayer
+	GetVertexDataLayer(key string) *UDDataLayer
+	RemoveVertexDataLayer(key string)
+	CreateEdgeDataLayer(key string) BDDataLayer
+	GetEdgeDataLayer(key string) BDDataLayer
+	RemoveEdgeDataLayer(key string)
 	VerifyConnected() bool
+	setVisited(index int, visited bool)
+	isVisited(index int) bool
 }

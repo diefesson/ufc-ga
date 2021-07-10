@@ -6,9 +6,7 @@ import (
 )
 
 func main() {
-	var i graph.Graph
-	i = graph.NewDiGraph(10)
-	i.Connect(0, 1)
-	fmt.Println(i.Size())
-	fmt.Println(i.VerifyConnected())
+	g := graph.NewUniGraph(3)
+	g.ForEdges(func(from, to int) { g.Connect(from, to) })
+	fmt.Println(g.VerifyConnected())
 }

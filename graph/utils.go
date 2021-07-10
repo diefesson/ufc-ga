@@ -2,14 +2,24 @@ package graph
 
 import "fmt"
 
-func PrintVertex(index int, vertex Vertex) {
-	fmt.Println(index, ":", vertex)
+func solveUniIndex(from, to int) (int, int) {
+	if from > to {
+		from, to = to, from
+	}
+	return from, to - from
 }
 
-func PrintEdge(from, to int, edge Edge) {
-	fmt.Println(from, to, ":", edge)
+//TODO update to use data oriented information
+func PrintVertex(index int) {
+	fmt.Println(index)
 }
 
+//TODO update to use data oriented information
+func PrintEdge(from, to int) {
+	fmt.Println(from, to)
+}
+
+//TODO update to use data oriented information
 func PrintGraph(g Graph) {
 	g.ForVertices(PrintVertex)
 	g.ForEdges(PrintEdge)
