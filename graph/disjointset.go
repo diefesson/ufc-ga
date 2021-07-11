@@ -68,8 +68,6 @@ func (ds *DisjointSet) Separate(index int) {
 	ds.parent[index] = index
 }
 
-type NodeProcessor func(index int)
-
 func (ds *DisjointSet) ForEachNode(np NodeProcessor) {
 	for i := 0; i < len(ds.parent); i++ {
 		np(i)

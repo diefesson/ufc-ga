@@ -1,12 +1,9 @@
 package main
 
 import (
-	"ag/graph"
-	"fmt"
+	"ag/demos/kruskaldemo"
 )
 
 func main() {
-	g := graph.NewUniGraph(3)
-	g.ForEdges(func(from, to int) { g.Connect(from, to) })
-	fmt.Println(g.VerifyConnected())
+	kruskaldemo.RunDemo()
 }

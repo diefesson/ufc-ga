@@ -1,7 +1,7 @@
 package graph
 
 type UniGraph struct {
-	baseGraphImpl
+	baseGraph
 }
 
 func makeUniEdges(capacity int) [][]bool {
@@ -13,31 +13,31 @@ func makeUniEdges(capacity int) [][]bool {
 }
 
 func NewUniGraph(capacity int) *UniGraph {
-	base := makeBaseGraphImpl(capacity)
+	base := makeBaseGraph(capacity)
 	base.edgeConnected = makeUniEdges(capacity)
 	return &UniGraph{base}
 }
 
 func (g *UniGraph) Remove(index int) {
-	g.baseGraphImpl.Remove(index)
+	g.baseGraph.Remove(index)
 	g.ForNeighbours(index, func(i int) { g.Disconnect(index, i) })
 }
 
 func (g *UniGraph) Connect(from, to int) {
-	g.baseGraphImpl.Add(from)
-	g.baseGraphImpl.Add(to)
+	g.baseGraph.Add(from)
+	g.baseGraph.Add(to)
 	from, to = solveUniIndex(from, to)
-	g.baseGraphImpl.Connect(from, to)
+	g.baseGraph.Connect(from, to)
 }
 
 func (g *UniGraph) IsConnected(from, to int) bool {
 	from, to = solveUniIndex(from, to)
-	return g.baseGraphImpl.IsConnected(from, to)
+	return g.baseGraph.IsConnected(from, to)
 }
 
 func (g *UniGraph) Disconnect(from, to int) {
 	from, to = solveUniIndex(from, to)
-	g.baseGraphImpl.Disconnect(from, to)
+	g.baseGraph.Disconnect(from, to)
 }
 
 func (g *UniGraph) ForNeighbours(index int, vp VertexProcessor) {

@@ -1,7 +1,7 @@
 package graph
 
 type DiGraph struct {
-	baseGraphImpl
+	baseGraph
 }
 
 func makeDiEdges(vertexCount int) [][]bool {
@@ -13,21 +13,21 @@ func makeDiEdges(vertexCount int) [][]bool {
 }
 
 func NewDiGraph(capacity int) *DiGraph {
-	base := makeBaseGraphImpl(capacity)
+	base := makeBaseGraph(capacity)
 	base.edgeConnected = makeDiEdges(capacity)
 	return &DiGraph{base}
 }
 
 func (g *DiGraph) Remove(index int) {
-	g.baseGraphImpl.Remove(index)
+	g.baseGraph.Remove(index)
 	g.ForFrom(index, func(i int) { g.Disconnect(index, i) })
 	g.ForTo(index, func(i int) { g.Disconnect(i, index) })
 }
 
 func (g *DiGraph) Connect(from, to int) {
-	g.baseGraphImpl.Add(from)
-	g.baseGraphImpl.Add(to)
-	g.baseGraphImpl.Connect(from, to)
+	g.baseGraph.Add(from)
+	g.baseGraph.Add(to)
+	g.baseGraph.Connect(from, to)
 }
 
 func (g *DiGraph) ForFrom(index int, vp VertexProcessor) {

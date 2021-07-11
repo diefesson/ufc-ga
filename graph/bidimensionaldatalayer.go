@@ -20,18 +20,14 @@ func NewUniEdgeDataLayer(size int) *UniEdgeDataLayer {
 	return &UniEdgeDataLayer{data}
 }
 
-func (dl *UniEdgeDataLayer) Get(i, j int) Data {
-	if i > j {
-		i, j = j, i
-	}
-	return dl.data[i][j]
+func (dl *UniEdgeDataLayer) Get(from, to int) Data {
+	from, to = solveUniIndex(from, to)
+	return dl.data[from][to]
 }
 
-func (dl *UniEdgeDataLayer) Set(i, j int, data Data) {
-	if i > j {
-		i, j = j, i
-	}
-	dl.data[i][j] = data
+func (dl *UniEdgeDataLayer) Set(from, to int, data Data) {
+	from, to = solveUniIndex(from, to)
+	dl.data[from][to] = data
 }
 
 func (dl *UniEdgeDataLayer) Size() int {
