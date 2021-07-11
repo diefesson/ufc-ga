@@ -23,7 +23,7 @@ func makeKruskal(graph *UniGraph, cd DistanceCalculator, of EdgeProcessor) krusk
 		of = emptyEdgeProcessor
 	}
 	edgeLayer := NewUniEdgeDataLayer(graph.Capacity())
-	graph.ForEdges(func(from, to int) { edgeLayer.Set(from, to, UNMARKED) })
+	graph.ForEdges(func(_ Graph, from, to int) { edgeLayer.Set(from, to, UNMARKED) })
 	return kruskal{
 		graph:             graph,
 		disjointSet:       NewDisjointSet(graph.Capacity()),
@@ -36,7 +36,7 @@ func makeKruskal(graph *UniGraph, cd DistanceCalculator, of EdgeProcessor) krusk
 func (k *kruskal) sweep() (int, int) {
 	distance := math.MaxFloat64
 	from, to := -1, -1
-	k.graph.ForEdges(func(f, t int) {
+	k.graph.ForEdges(func(_ Graph, f, t int) {
 		if k.edgeLayer.Get(f, t) == UNMARKED {
 			fr := k.disjointSet.RepresentantOf(f)
 			tr := k.disjointSet.RepresentantOf(t)
@@ -52,12 +52,16 @@ func (k *kruskal) sweep() (int, int) {
 	return from, to
 }
 
+func (k *kruskal) run() {
+	for from, to := k.sweep(); from != -1; from, to = k.sweep() {
+		k.disjointSet.Join(from, to)
+		k.edgeLayer.Set(from, to, MARKED)
+		k.onFound(k.graph, from, to)
+	}
+}
+
 func KruskalAlgorithm(g *UniGraph, cd DistanceCalculator, of EdgeProcessor) (*DisjointSet, *UniEdgeDataLayer) {
 	kruskal := makeKruskal(g, cd, of)
-	for from, to := kruskal.sweep(); from != -1; from, to = kruskal.sweep() {
-		kruskal.disjointSet.Join(from, to)
-		kruskal.edgeLayer.Set(from, to, MARKED)
-		kruskal.onFound(from, to)
-	}
+	kruskal.run()
 	return kruskal.disjointSet, kruskal.edgeLayer
 }

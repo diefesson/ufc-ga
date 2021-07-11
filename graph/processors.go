@@ -1,19 +1,35 @@
 package graph
 
-// Graphs
+import "fmt"
 
-type VertexProcessor func(index int)
+type VertexProcessor func(g Graph, index int)
 
-func emptyVertexProcessor(index int) {}
+func emptyVertexProcessor(g Graph, index int) {}
 
-type EdgeProcessor func(from, to int)
+type EdgeProcessor func(g Graph, from, to int)
 
-func emptyEdgeProcessor(from, to int) {}
-
-// Disjoint set
+func emptyEdgeProcessor(g Graph, from, to int) {}
 
 type NodeProcessor func(index int)
 
-// Kruskal algorithm
-
 type DistanceCalculator func(g *UniGraph, from, to int) float64
+
+func DisconnectFrom(from int) VertexProcessor {
+	return func(g Graph, index int) {
+		g.Disconnect(from, index)
+	}
+}
+
+func DisconnectTo(to int) VertexProcessor {
+	return func(g Graph, index int) {
+		g.Disconnect(index, to)
+	}
+}
+
+func PrintVertex(_ Graph, index int) {
+	fmt.Println(index)
+}
+
+func PrintEdge(_ Graph, from, to int) {
+	fmt.Println(from, to)
+}

@@ -20,7 +20,7 @@ func NewUniGraph(capacity int) *UniGraph {
 
 func (g *UniGraph) Remove(index int) {
 	g.baseGraph.Remove(index)
-	g.ForNeighbours(index, func(i int) { g.Disconnect(index, i) })
+	g.ForNeighbours(index, DisconnectFrom(index))
 }
 
 func (g *UniGraph) Connect(from, to int) {
@@ -43,15 +43,21 @@ func (g *UniGraph) Disconnect(from, to int) {
 func (g *UniGraph) ForNeighbours(index int, vp VertexProcessor) {
 	for i := 0; i < g.Capacity(); i++ {
 		if g.IsConnected(index, i) {
-			vp(i)
+			vp(g, i)
 		}
+	}
+}
+
+func (g *UniGraph) ForVertices(f VertexProcessor) {
+	for i := 0; i < g.Capacity(); i++ {
+		f(g, i)
 	}
 }
 
 func (g *UniGraph) ForEdges(f EdgeProcessor) {
 	for i := 0; i < g.Capacity(); i++ {
 		for j := i; j < g.Capacity(); j++ {
-			f(i, j)
+			f(g, i, j)
 		}
 	}
 }
