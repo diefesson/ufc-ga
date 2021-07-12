@@ -8,14 +8,6 @@ func clearVisited(g Graph) {
 	g.ForVertices(func(_ Graph, index int) { g.setVisited(index, false) })
 }
 
-func ForPresentVertices(g Graph, vp VertexProcessor) {
-	g.ForVertices(FilterVertices(PresentVertexFilter, vp))
-}
-
-func ForConnectedEdges(g Graph, ep EdgeProcessor) {
-	g.ForEdges(FilterEdges(ConnectedEdgeFilter, ep))
-}
-
 func Neighbours(g Graph, index int) []int {
 	neighbours := make([]int, 0)
 	g.ForNeighbours(index, func(_ Graph, i int) { neighbours = append(neighbours, i) })

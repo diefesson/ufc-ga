@@ -26,6 +26,10 @@ func DisconnectTo(to int) VertexProcessor {
 	}
 }
 
+func ConnectProcessor(g Graph, from, to int) {
+	g.Connect(from, to)
+}
+
 func PrintVertex(_ Graph, index int) {
 	fmt.Println(index)
 }

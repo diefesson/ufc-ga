@@ -9,22 +9,23 @@ type city struct {
 	x, y float64
 }
 
-func createGraph() *graph.UniGraph {
-	g := graph.NewUniGraph(5)
-	cities := g.CreateVertexDataLayer("cities")
-	cities.Set(0, city{0, 0})
-	cities.Set(1, city{1, 0})
-	cities.Set(2, city{0, 1})
-	cities.Set(3, city{1, 1})
-	cities.Set(4, city{2, 2})
-	return g
+func createCities() *graph.UniGraph {
+	cities := graph.NewUniGraph(5)
+	cities.ForEdges(graph.ConnectProcessor)
+	coordinates := cities.CreateVertexDataLayer("coordinates")
+	coordinates.Set(0, city{0, 0})
+	coordinates.Set(1, city{1, 0})
+	coordinates.Set(2, city{0, 1})
+	coordinates.Set(3, city{1, 1})
+	coordinates.Set(4, city{2, 2})
+	return cities
 }
 
 func CreateDistanceCalculator(g *graph.UniGraph) graph.DistanceCalculator {
-	cities := g.GetVertexDataLayer("cities")
+	coordinates := g.GetVertexDataLayer("coordinates")
 	return func(_ *graph.UniGraph, from, to int) float64 {
-		fc := cities.Get(from).(city)
-		tc := cities.Get(to).(city)
+		fc := coordinates.Get(from).(city)
+		tc := coordinates.Get(to).(city)
 		dx := tc.x - fc.x
 		dy := tc.y - fc.y
 		return math.Sqrt(math.Pow(dx, 2) + math.Pow(dy, 2))
@@ -32,7 +33,7 @@ func CreateDistanceCalculator(g *graph.UniGraph) graph.DistanceCalculator {
 }
 
 func RunDemo() {
-	citiesGraph := createGraph()
+	citiesGraph := createCities()
 	dc := CreateDistanceCalculator(citiesGraph)
 	graph.KruskalAlgorithm(citiesGraph, dc, graph.PrintEdge)
 }
