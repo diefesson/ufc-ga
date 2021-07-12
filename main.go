@@ -1,9 +1,9 @@
 package main
 
 import (
-	"ag/demos/kruskaldemo"
+	"ag/demo"
 )
 
 func main() {
-	kruskaldemo.RunDemo()
+	demo.PrimDemo()
 }

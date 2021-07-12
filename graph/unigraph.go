@@ -62,17 +62,6 @@ func (g *UniGraph) ForEdges(f EdgeProcessor) {
 	}
 }
 
-func (g *UniGraph) findStart() int {
-	start := -1
-	for i := 0; i < g.Capacity(); i++ {
-		if g.IsPresent(i) {
-			start = i
-			break
-		}
-	}
-	return start
-}
-
 func (g *UniGraph) CreateEdgeDataLayer(key string) BDDataLayer {
 	dataLayer := NewUniEdgeDataLayer(g.Capacity())
 	g.edgeLayers[key] = dataLayer
@@ -83,6 +72,6 @@ func (g *UniGraph) VerifyConnected() bool {
 	if g.EdgeCount() == 0 {
 		return true
 	}
-	start := g.findStart()
+	start := FirstPresent(g)
 	return IsConnectedFrom(g, start)
 }

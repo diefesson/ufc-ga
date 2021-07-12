@@ -1,7 +1,5 @@
 package graph
 
-type Data interface{}
-
 type Graph interface {
 	Capacity() int
 	VertexCount() int

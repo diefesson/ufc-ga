@@ -4,11 +4,11 @@ import "fmt"
 
 type VertexProcessor func(g Graph, index int)
 
-func emptyVertexProcessor(g Graph, index int) {}
+func EmptyVertexProcessor(g Graph, index int) {}
 
 type EdgeProcessor func(g Graph, from, to int)
 
-func emptyEdgeProcessor(g Graph, from, to int) {}
+func EmptyEdgeProcessor(g Graph, from, to int) {}
 
 type NodeProcessor func(index int)
 
@@ -26,7 +26,7 @@ func DisconnectTo(to int) VertexProcessor {
 	}
 }
 
-func ConnectProcessor(g Graph, from, to int) {
+func ConnectEdge(g Graph, from, to int) {
 	g.Connect(from, to)
 }
 

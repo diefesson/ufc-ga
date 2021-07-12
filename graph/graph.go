@@ -14,12 +14,23 @@ func Neighbours(g Graph, index int) []int {
 	return neighbours
 }
 
+func FirstPresent(g Graph) int {
+	start := -1
+	for i := 0; i < g.Capacity(); i++ {
+		if g.IsPresent(i) {
+			start = i
+			break
+		}
+	}
+	return start
+}
+
 func DepthFirst(g Graph, start int, vp VertexProcessor, ep EdgeProcessor) {
 	if vp == nil {
-		vp = emptyVertexProcessor
+		vp = EmptyVertexProcessor
 	}
 	if ep == nil {
-		ep = emptyEdgeProcessor
+		ep = EmptyEdgeProcessor
 	}
 	clearVisited(g)
 	depthFirst(g, start, vp, ep)
@@ -38,7 +49,7 @@ func depthFirst(g Graph, index int, vp VertexProcessor, ep EdgeProcessor) {
 
 func BreadthFirst(g Graph, start int, vp VertexProcessor) {
 	if vp == nil {
-		vp = emptyVertexProcessor
+		vp = EmptyVertexProcessor
 	}
 	clearVisited(g)
 	breadthFirst(g, start, vp)

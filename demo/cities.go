@@ -1,4 +1,4 @@
-package kruskaldemo
+package demo
 
 import (
 	"ag/graph"
@@ -11,7 +11,7 @@ type city struct {
 
 func createCities() *graph.UniGraph {
 	cities := graph.NewUniGraph(5)
-	cities.ForEdges(graph.ConnectProcessor)
+	cities.ForEdges(graph.ConnectEdge)
 	coordinates := cities.CreateVertexDataLayer("coordinates")
 	coordinates.Set(0, city{0, 0})
 	coordinates.Set(1, city{1, 0})
@@ -21,8 +21,7 @@ func createCities() *graph.UniGraph {
 	return cities
 }
 
-func CreateDistanceCalculator(g *graph.UniGraph) graph.DistanceCalculator {
-	coordinates := g.GetVertexDataLayer("coordinates")
+func CreateDistanceCalculator(coordinates *graph.UDDataLayer) graph.DistanceCalculator {
 	return func(_ *graph.UniGraph, from, to int) float64 {
 		fc := coordinates.Get(from).(city)
 		tc := coordinates.Get(to).(city)
@@ -30,10 +29,4 @@ func CreateDistanceCalculator(g *graph.UniGraph) graph.DistanceCalculator {
 		dy := tc.y - fc.y
 		return math.Sqrt(math.Pow(dx, 2) + math.Pow(dy, 2))
 	}
-}
-
-func RunDemo() {
-	citiesGraph := createCities()
-	dc := CreateDistanceCalculator(citiesGraph)
-	graph.KruskalAlgorithm(citiesGraph, dc, graph.PrintEdge)
 }

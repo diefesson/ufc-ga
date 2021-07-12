@@ -5,6 +5,7 @@ type BDDataLayerProcessor func(i, j int, data Data)
 type BDDataLayer interface {
 	Get(i, j int) Data
 	Set(i, j int, data Data)
+	SetAll(d Data)
 	Size() int
 }
 
@@ -30,6 +31,14 @@ func (dl *UniEdgeDataLayer) Set(from, to int, data Data) {
 	dl.data[from][to] = data
 }
 
+func (dl *UniEdgeDataLayer) SetAll(d Data) {
+	for i := 0; i < len(dl.data); i++ {
+		for j := 0; j < len(dl.data[i]); j++ {
+			dl.data[i][j] = d
+		}
+	}
+}
+
 func (dl *UniEdgeDataLayer) Size() int {
 	return len(dl.data)
 }
@@ -52,6 +61,14 @@ func (dl *DiEdgeDataLayer) Get(from, to int) Data {
 
 func (dl *DiEdgeDataLayer) Set(from, to int, data Data) {
 	dl.data[from][to] = data
+}
+
+func (dl *DiEdgeDataLayer) SetAll(d Data) {
+	for i := 0; i < dl.Size(); i++ {
+		for j := 0; j < dl.Size(); j++ {
+			dl.data[i][j] = d
+		}
+	}
 }
 
 func (dl *DiEdgeDataLayer) Size() int {
