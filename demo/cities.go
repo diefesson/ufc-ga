@@ -11,7 +11,7 @@ type city struct {
 
 func createCities() *graph.UniGraph {
 	cities := graph.NewUniGraph(5)
-	cities.ForEdges(graph.ConnectEdge)
+	cities.ForEdges(graph.Connect)
 	coordinates := cities.CreateVertexDataLayer("coordinates")
 	coordinates.Set(0, city{0, 0})
 	coordinates.Set(1, city{1, 0})

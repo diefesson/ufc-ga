@@ -51,13 +51,13 @@ func (p *prim) run() {
 	}
 	start := graph.FirstPresent(p.graph)
 	p.markedVertices.Set(start, MARKED)
-	p.graph.ForNeighbours(start, enqueueEdges(p, start))
+	graph.ForNeighbours(p.graph, start, enqueueEdges(p, start))
 	for i := 0; i < p.graph.VertexCount()-1; i++ {
 		e := p.nextEdge()
 		p.markedVertices.Set(e.to, MARKED)
 		p.markedEdges.Set(e.from, e.to, MARKED)
 		p.onFound(p.graph, e.from, e.to)
-		p.graph.ForNeighbours(e.to, enqueueEdges(p, e.to))
+		graph.ForNeighbours(p.graph, e.to, enqueueEdges(p, e.to))
 	}
 }
 

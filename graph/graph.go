@@ -8,9 +8,29 @@ func clearVisited(g Graph) {
 	g.ForVertices(func(_ Graph, index int) { g.setVisited(index, false) })
 }
 
+func ForEdgesFrom(g Graph, from int, ep EdgeProcessor) {
+	for to := 0; to < g.Capacity(); to++ {
+		ep(g, from, to)
+	}
+}
+
+func ForEdgesTo(g Graph, to int, ep EdgeProcessor) {
+	for from := 0; from < g.Capacity(); from++ {
+		ep(g, from, to)
+	}
+}
+
+func ForNeighbours(g Graph, index int, vp VertexProcessor) {
+	ForEdgesFrom(g, index, IfConnected(SelectTo(vp)))
+}
+
+func ForConnections(g Graph, index int, ep EdgeProcessor) {
+	ForEdgesFrom(g, index, IfConnected(ep))
+}
+
 func Neighbours(g Graph, index int) []int {
 	neighbours := make([]int, 0)
-	g.ForNeighbours(index, func(_ Graph, i int) { neighbours = append(neighbours, i) })
+	ForNeighbours(g, index, func(_ Graph, i int) { neighbours = append(neighbours, i) })
 	return neighbours
 }
 
@@ -39,12 +59,12 @@ func DepthFirst(g Graph, start int, vp VertexProcessor, ep EdgeProcessor) {
 func depthFirst(g Graph, index int, vp VertexProcessor, ep EdgeProcessor) {
 	g.setVisited(index, true)
 	vp(g, index)
-	for _, i := range Neighbours(g, index) {
+	ForNeighbours(g, index, func(g Graph, i int) {
 		if !g.isVisited(i) {
 			ep(g, index, i)
 			depthFirst(g, i, vp, ep)
 		}
-	}
+	})
 }
 
 func BreadthFirst(g Graph, start int, vp VertexProcessor) {
@@ -63,12 +83,12 @@ func breadthFirst(g Graph, start int, vp VertexProcessor) {
 		index := e.Value.(int)
 		nexts.Remove(e)
 		vp(g, index)
-		for _, i := range Neighbours(g, index) {
+		ForNeighbours(g, index, func(g Graph, i int) {
 			if !g.isVisited(i) {
 				g.setVisited(i, true)
 				nexts.PushBack(i)
 			}
-		}
+		})
 	}
 }
 

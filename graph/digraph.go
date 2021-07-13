@@ -20,34 +20,14 @@ func NewDiGraph(capacity int) *DiGraph {
 
 func (g *DiGraph) Remove(index int) {
 	g.baseGraph.Remove(index)
-	g.ForFrom(index, DisconnectFrom(index))
-	g.ForTo(index, DisconnectTo(index))
+	ForEdgesFrom(g, index, IfConnected(Disconnect))
+	ForEdgesTo(g, index, IfConnected(Disconnect))
 }
 
 func (g *DiGraph) Connect(from, to int) {
 	g.baseGraph.Add(from)
 	g.baseGraph.Add(to)
 	g.baseGraph.Connect(from, to)
-}
-
-func (g *DiGraph) ForFrom(index int, vp VertexProcessor) {
-	for i := 0; i < g.Capacity(); i++ {
-		if g.IsConnected(index, i) {
-			vp(g, i)
-		}
-	}
-}
-
-func (g *DiGraph) ForNeighbours(index int, vp VertexProcessor) {
-	g.ForFrom(index, vp)
-}
-
-func (g *DiGraph) ForTo(index int, vp VertexProcessor) {
-	for i := 0; i < g.Capacity(); i++ {
-		if g.IsConnected(i, index) {
-			vp(g, i)
-		}
-	}
 }
 
 func (g *DiGraph) ForVertices(f VertexProcessor) {

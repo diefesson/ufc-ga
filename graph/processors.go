@@ -14,20 +14,32 @@ type NodeProcessor func(index int)
 
 type DistanceCalculator func(g *UniGraph, from, to int) float64
 
-func DisconnectFrom(from int) VertexProcessor {
-	return func(g Graph, index int) {
-		g.Disconnect(from, index)
-	}
+func Add(g Graph, index int) {
+	g.Add(index)
 }
 
-func DisconnectTo(to int) VertexProcessor {
-	return func(g Graph, index int) {
-		g.Disconnect(index, to)
-	}
+func Remove(g Graph, index int) {
+	g.Remove(index)
 }
 
-func ConnectEdge(g Graph, from, to int) {
+func Connect(g Graph, from, to int) {
 	g.Connect(from, to)
+}
+
+func Disconnect(g Graph, from, to int) {
+	g.Disconnect(from, to)
+}
+
+func SelectFrom(vp VertexProcessor) EdgeProcessor {
+	return func(g Graph, from, to int) {
+		vp(g, from)
+	}
+}
+
+func SelectTo(vp VertexProcessor) EdgeProcessor {
+	return func(g Graph, from, to int) {
+		vp(g, to)
+	}
 }
 
 func PrintVertex(_ Graph, index int) {

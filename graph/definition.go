@@ -10,7 +10,6 @@ type Graph interface {
 	Connect(from, to int)
 	IsConnected(from, to int) bool
 	Disconnect(from, to int)
-	ForNeighbours(index int, vp VertexProcessor)
 	ForVertices(vp VertexProcessor)
 	ForEdges(ep EdgeProcessor)
 	CreateVertexDataLayer(key string) *UDDataLayer
