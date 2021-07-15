@@ -7,6 +7,6 @@ import (
 
 func KruskalDemo() {
 	cities := createCities()
-	dc := CreateDistanceCalculator(cities.GetVertexDataLayer("coordinates"))
+	dc := createDistanceCalculator(cities.GetVertexDataLayer("coordinates"))
 	algorithms.Kruskal(cities, dc, graph.PrintEdge)
 }

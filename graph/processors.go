@@ -14,6 +14,10 @@ type NodeProcessor func(index int)
 
 type DistanceCalculator func(g *UniGraph, from, to int) float64
 
+func vpCompat(g Graph, vp VertexProcessor) func(*baseGraph, int) {
+	return func(_ *baseGraph, i int) { vp(g, i) }
+}
+
 func Add(g Graph, index int) {
 	g.Add(index)
 }

@@ -7,6 +7,6 @@ import (
 
 func PrimDemo() {
 	cities := createCities()
-	dc := CreateDistanceCalculator(cities.GetVertexDataLayer("coordinates"))
+	dc := createDistanceCalculator(cities.GetVertexDataLayer("coordinates"))
 	algorithms.Prim(cities, dc, graph.PrintEdge)
 }

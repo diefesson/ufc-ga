@@ -40,10 +40,8 @@ func (g *UniGraph) Disconnect(from, to int) {
 	g.baseGraph.Disconnect(from, to)
 }
 
-func (g *UniGraph) ForVertices(f VertexProcessor) {
-	for i := 0; i < g.Capacity(); i++ {
-		f(g, i)
-	}
+func (g *UniGraph) ForVertices(vp VertexProcessor) {
+	g.baseGraph.ForVertices(vpCompat(g, vp))
 }
 
 func (g *UniGraph) ForEdges(f EdgeProcessor) {

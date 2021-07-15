@@ -30,10 +30,8 @@ func (g *DiGraph) Connect(from, to int) {
 	g.baseGraph.Connect(from, to)
 }
 
-func (g *DiGraph) ForVertices(f VertexProcessor) {
-	for i := 0; i < g.Capacity(); i++ {
-		f(g, i)
-	}
+func (g *DiGraph) ForVertices(vp VertexProcessor) {
+	g.baseGraph.ForVertices(vpCompat(g, vp))
 }
 
 func (g *DiGraph) ForEdges(ep EdgeProcessor) {

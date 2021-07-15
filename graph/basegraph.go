@@ -67,6 +67,12 @@ func (g *baseGraph) Disconnect(from, to int) {
 	}
 }
 
+func (g *baseGraph) ForVertices(f func(g *baseGraph, index int)) {
+	for i := 0; i < g.Capacity(); i++ {
+		f(g, i)
+	}
+}
+
 func (g *baseGraph) CreateVertexDataLayer(key string) *UDDataLayer {
 	dataLayer := NewUnidimensionalDataLayer(g.Capacity())
 	g.vertexLayers[key] = dataLayer
