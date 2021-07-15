@@ -21,9 +21,6 @@ type kruskal struct {
 }
 
 func makeKruskal(g *graph.UniGraph, cd graph.DistanceCalculator, of graph.EdgeProcessor) kruskal {
-	if of == nil {
-		of = graph.EmptyEdgeProcessor
-	}
 	markedEdges := graph.NewUniEdgeDataLayer(g.Capacity())
 	g.ForEdges(func(_ graph.Graph, from, to int) { markedEdges.Set(from, to, UNMARKED) })
 	return kruskal{
@@ -64,6 +61,9 @@ func (k *kruskal) run() {
 }
 
 func Kruskal(g *graph.UniGraph, cd graph.DistanceCalculator, of graph.EdgeProcessor) *graph.UniEdgeDataLayer {
+	if of == nil {
+		of = graph.EmptyEdgeProcessor
+	}
 	k := makeKruskal(g, cd, of)
 	k.run()
 	return k.markedEdges

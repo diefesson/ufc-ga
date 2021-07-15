@@ -63,6 +63,9 @@ func (p *prim) run() {
 }
 
 func Prim(g *graph.UniGraph, dc graph.DistanceCalculator, of graph.EdgeProcessor) *graph.UniEdgeDataLayer {
+	if of == nil {
+		of = graph.EmptyEdgeProcessor
+	}
 	p := makePrim(g, dc, of)
 	p.run()
 	return p.markedEdges

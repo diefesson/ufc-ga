@@ -12,7 +12,7 @@ func EmptyEdgeProcessor(g Graph, from, to int) {}
 
 type NodeProcessor func(index int)
 
-type DistanceCalculator func(g *UniGraph, from, to int) float64
+type DistanceCalculator func(g Graph, from, to int) float64
 
 func vpCompat(g Graph, vp VertexProcessor) func(*baseGraph, int) {
 	return func(_ *baseGraph, i int) { vp(g, i) }

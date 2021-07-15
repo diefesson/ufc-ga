@@ -23,7 +23,7 @@ func createCities() *graph.UniGraph {
 }
 
 func createDistanceCalculator(coordinates *graph.UDDataLayer) graph.DistanceCalculator {
-	return func(_ *graph.UniGraph, from, to int) float64 {
+	return func(_ graph.Graph, from, to int) float64 {
 		fc := coordinates.Get(from).(city)
 		tc := coordinates.Get(to).(city)
 		dx := tc.x - fc.x
