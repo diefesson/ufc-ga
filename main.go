@@ -1,7 +1,7 @@
 package main
 
 import (
-	"ag/demo"
+	"github.com/diefesson/graph-algorithms/demo"
 )
 
 func main() {

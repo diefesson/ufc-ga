@@ -1,8 +1,9 @@
 package algorithms
 
 import (
-	"ag/graph"
 	"container/heap"
+
+	"github.com/diefesson/graph-algorithms/graph"
 )
 
 type prim struct {

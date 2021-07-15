@@ -1,8 +1,9 @@
 package algorithms
 
 import (
-	"ag/graph"
 	"math"
+
+	"github.com/diefesson/graph-algorithms/graph"
 )
 
 const (

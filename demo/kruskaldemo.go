@@ -1,8 +1,8 @@
 package demo
 
 import (
-	"ag/graph"
-	"ag/graph/algorithms"
+	"github.com/diefesson/graph-algorithms/graph"
+	"github.com/diefesson/graph-algorithms/graph/algorithms"
 )
 
 func KruskalDemo() {
