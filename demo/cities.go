@@ -3,7 +3,7 @@ package demo
 import (
 	"math"
 
-	"github.com/diefesson/graph-algorithms/graph"
+	"github.com/diefesson/ufc-ga/graph"
 )
 
 type city struct {

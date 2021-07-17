@@ -3,7 +3,7 @@ package algorithms
 import (
 	"container/heap"
 
-	"github.com/diefesson/graph-algorithms/graph"
+	"github.com/diefesson/ufc-ga/graph"
 )
 
 type prim struct {

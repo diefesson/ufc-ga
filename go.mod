@@ -1,3 +1,3 @@
-module github.com/diefesson/graph-algorithms
+module github.com/diefesson/ufc-ga
 
 go 1.16

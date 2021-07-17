@@ -1,8 +1,8 @@
 package demo
 
 import (
-	"github.com/diefesson/graph-algorithms/graph"
-	"github.com/diefesson/graph-algorithms/graph/algorithms"
+	"github.com/diefesson/ufc-ga/graph"
+	"github.com/diefesson/ufc-ga/graph/algorithms"
 )
 
 func KruskalDemo() {
