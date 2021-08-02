@@ -21,4 +21,5 @@ type Graph interface {
 	VerifyConnected() bool
 	setVisited(index int, visited bool)
 	isVisited(index int) bool
+	Clone() Graph
 }

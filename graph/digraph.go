@@ -56,3 +56,9 @@ func (g *DiGraph) VerifyConnected() bool {
 	}
 	return true
 }
+
+func (g *DiGraph) Clone() Graph {
+	c := NewDiGraph(g.Capacity())
+	transferBaseData(&c.baseGraph, &g.baseGraph)
+	return c
+}

@@ -102,3 +102,12 @@ func (g *baseGraph) isVisited(index int) bool {
 func (g *baseGraph) setVisited(index int, visited bool) {
 	g.vertexVisited[index] = visited
 }
+
+func transferBaseData(to, from *baseGraph) {
+	copy(to.vertexPresent, from.vertexPresent)
+	for i := 0; i < from.Capacity(); i++ {
+		copy(to.edgeConnected[i], from.edgeConnected[i])
+	}
+	to.vertexCount = from.vertexCount
+	to.edgeCount = from.edgeCount
+}

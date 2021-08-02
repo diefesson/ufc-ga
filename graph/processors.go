@@ -46,6 +46,12 @@ func SelectTo(vp VertexProcessor) EdgeProcessor {
 	}
 }
 
+func CollectVerticesInto(slice *[]int) VertexProcessor {
+	return func(_ Graph, index int) {
+		*slice = append(*slice, index)
+	}
+}
+
 func PrintVertex(_ Graph, index int) {
 	fmt.Println(index)
 }

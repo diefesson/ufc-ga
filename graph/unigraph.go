@@ -65,3 +65,9 @@ func (g *UniGraph) VerifyConnected() bool {
 	start := FirstPresent(g)
 	return IsConnectedFrom(g, start)
 }
+
+func (g *UniGraph) Clone() Graph {
+	c := NewUniGraph(g.Capacity())
+	transferBaseData(&c.baseGraph, &g.baseGraph)
+	return c
+}

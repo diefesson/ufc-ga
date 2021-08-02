@@ -1,4 +1,4 @@
-package demo
+package demos
 
 import (
 	"github.com/diefesson/ufc-ga/graph"
@@ -6,7 +6,7 @@ import (
 )
 
 func KruskalDemo() {
-	cities := createCities()
-	dc := createDistanceCalculator(cities.GetVertexDataLayer("coordinates"))
+	cities := createUniCities()
+	dc := createDistanceCalculator(createCoordinates())
 	algorithms.Kruskal(cities, dc, graph.PrintEdge)
 }

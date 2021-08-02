@@ -30,7 +30,7 @@ func ForConnections(g Graph, index int, ep EdgeProcessor) {
 
 func Neighbours(g Graph, index int) []int {
 	neighbours := make([]int, 0)
-	ForNeighbours(g, index, func(_ Graph, i int) { neighbours = append(neighbours, i) })
+	ForNeighbours(g, index, CollectVerticesInto(&neighbours))
 	return neighbours
 }
 
@@ -97,4 +97,36 @@ func IsConnectedFrom(g Graph, start int) bool {
 	counter := func(_ Graph, _ int) { count++ }
 	DepthFirst(g, start, counter, nil)
 	return count == g.VertexCount()
+}
+
+func IsRoot(g Graph, index int) bool {
+	if !g.IsPresent(index) {
+		return false
+	}
+	for i := 0; i < g.Capacity(); i++ {
+		if g.IsConnected(i, index) {
+			return false
+		}
+	}
+	return true
+}
+
+func IsLeaf(g Graph, index int) bool {
+	if !g.IsPresent(index) {
+		return false
+	}
+	for i := 0; i < g.Capacity(); i++ {
+		if g.IsConnected(index, i) {
+			return false
+		}
+	}
+	return true
+}
+
+func ForRoots(g Graph, vp VertexProcessor) {
+	g.ForVertices(IfRoot(vp))
+}
+
+func ForLeafs(g Graph, vp VertexProcessor) {
+	g.ForVertices(IfLeaf(vp))
 }

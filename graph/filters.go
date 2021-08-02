@@ -27,3 +27,19 @@ func IfNotLoopback(ep EdgeProcessor) EdgeProcessor {
 		}
 	}
 }
+
+func IfRoot(vp VertexProcessor) VertexProcessor {
+	return func(g Graph, index int) {
+		if IsRoot(g, index) {
+			vp(g, index)
+		}
+	}
+}
+
+func IfLeaf(vp VertexProcessor) VertexProcessor {
+	return func(g Graph, index int) {
+		if IsLeaf(g, index) {
+			vp(g, index)
+		}
+	}
+}

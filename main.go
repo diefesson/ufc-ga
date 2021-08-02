@@ -1,9 +1,7 @@
 package main
 
-import (
-	"github.com/diefesson/ufc-ga/demo"
-)
+import "github.com/diefesson/ufc-ga/demos"
 
 func main() {
-	demo.PrimDemo()
+	demos.DAGSPDemo()
 }
