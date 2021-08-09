@@ -69,26 +69,30 @@ func FirstPresent(g Graph) int {
 	return start
 }
 
-func DepthFirst(g Graph, start int, vp VertexProcessor, ep EdgeProcessor) {
-	if vp == nil {
-		vp = EmptyVertexProcessor
+func DepthFirst(g Graph, start int, down VertexProcessor, up VertexProcessor, ep EdgeProcessor) {
+	if down == nil {
+		down = EmptyVertexProcessor
+	}
+	if up == nil {
+		up = EmptyVertexProcessor
 	}
 	if ep == nil {
 		ep = EmptyEdgeProcessor
 	}
 	clearVisited(g)
-	depthFirst(g, start, vp, ep)
+	depthFirst(g, start, down, up, ep)
 }
 
-func depthFirst(g Graph, index int, vp VertexProcessor, ep EdgeProcessor) {
+func depthFirst(g Graph, index int, down VertexProcessor, up VertexProcessor, ep EdgeProcessor) {
 	g.setVisited(index, true)
-	vp(g, index)
+	down(g, index)
 	ForNeighbours(g, index, func(g Graph, i int) {
 		if !g.isVisited(i) {
 			ep(g, index, i)
-			depthFirst(g, i, vp, ep)
+			depthFirst(g, i, down, up, ep)
 		}
 	})
+	up(g, index)
 }
 
 func BreadthFirst(g Graph, start int, vp VertexProcessor) {
@@ -119,7 +123,7 @@ func breadthFirst(g Graph, start int, vp VertexProcessor) {
 func IsConnectedFrom(g Graph, start int) bool {
 	count := 0
 	counter := func(_ Graph, _ int) { count++ }
-	DepthFirst(g, start, counter, nil)
+	DepthFirst(g, start, counter, nil, nil)
 	return count == g.VertexCount()
 }
 
