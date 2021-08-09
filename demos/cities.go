@@ -30,11 +30,11 @@ func createUniCities() *graph.UniGraph {
 func createDiCities() *graph.DiGraph {
 	cities := graph.NewDiGraph(6)
 	cities.Connect(0, 1)
-	cities.Connect(1, 2)
-	cities.Connect(1, 4)
-	cities.Connect(2, 3)
-	cities.Connect(4, 3)
 	cities.Connect(5, 3)
+	cities.Connect(3, 2)
+	cities.Connect(3, 4)
+	cities.Connect(2, 1)
+	cities.Connect(4, 1)
 	return cities
 }
 

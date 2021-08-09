@@ -32,7 +32,7 @@ func calculateDistances(
 	for i := 0; i < len(distances); i++ {
 		distances[i] = math.Inf(1)
 	}
-	distances[start] = 0.0
+	distances[vertices[start]] = 0.0
 	for i := start; i < end; i++ {
 		v := vertices[i]
 		baseDistance := distances[v]
@@ -44,6 +44,7 @@ func calculateDistances(
 			}
 		})
 	}
+
 	return distances
 }
 

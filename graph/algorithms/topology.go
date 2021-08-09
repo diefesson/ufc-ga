@@ -29,11 +29,11 @@ func InTopologicalOrder(g *graph.DiGraph, vp graph.VertexProcessor) {
 	for i := 0; i < len(depths); i++ {
 		depths[i] = math.MinInt64
 	}
-	graph.ForRoots(g, func(_ graph.Graph, r int) {
+	g.ForVertices(graph.IfRoot(func(_ graph.Graph, r int) {
 		calculateDepthsFrom(g, depths, r)
 		nexts.PushBack(r)
 		visited[r] = true
-	})
+	}))
 
 	for e := nexts.Front(); e != nil; e = nexts.Front() {
 		v := e.Value.(int)

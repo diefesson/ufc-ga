@@ -150,11 +150,3 @@ func IsLeaf(g Graph, index int) bool {
 	}
 	return true
 }
-
-func ForRoots(g Graph, vp VertexProcessor) {
-	g.ForVertices(IfRoot(vp))
-}
-
-func ForLeafs(g Graph, vp VertexProcessor) {
-	g.ForVertices(IfLeaf(vp))
-}

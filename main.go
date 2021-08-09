@@ -3,5 +3,5 @@ package main
 import "github.com/diefesson/ufc-ga/demos"
 
 func main() {
-	demos.DAGSPDemo()
+	demos.BellmanFordDemo()
 }
