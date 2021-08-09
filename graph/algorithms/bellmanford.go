@@ -30,6 +30,15 @@ func BellmanFord(g *graph.DiGraph, from, to int, dc graph.DistanceCalculator) (f
 		}))
 	}
 
+	if predecessors[to] == -1 {
+		panic("Theres no valid shortest path")
+	}
+	g.ForEdges(graph.IfConnected(func(g graph.Graph, from, to int) {
+		if distances[from]+dc(g, from, to) < distances[to] {
+			panic("Graph contains negative weight")
+		}
+	}))
+
 	for v := to; v != -1; v = predecessors[v] {
 		path = append(path, v)
 	}
