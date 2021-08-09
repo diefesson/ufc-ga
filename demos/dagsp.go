@@ -9,9 +9,9 @@ import (
 func DAGSPDemo() {
 	graph := createDiCities()
 	dc := createDistanceCalculator(createCoordinates())
-	distance, path := algorithms.DAGSP(graph, 0, 4, dc)
+	distance, path := algorithms.DAGSP(graph, 0, 3, dc)
 	fmt.Println("distance: ", distance)
 	for i, v := range path {
-		fmt.Println(i, ": ", v)
+		fmt.Println(i, ":", v)
 	}
 }

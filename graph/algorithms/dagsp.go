@@ -75,8 +75,11 @@ func DAGSP(g *graph.DiGraph, from, to int, dc graph.DistanceCalculator) (float64
 	vertices := TopologicalOrdered(g)
 	start, end := findStartEnd(vertices, from, to)
 	if end < start {
-		return -1, nil
+		panic("Cannot calculate path because topologically 'to' is before 'from'")
 	}
 	distances := calculateDistances(g, vertices, start, end, dc)
+	if math.IsInf(distances[to], 1) {
+		panic("There's no valid path to the given vertices")
+	}
 	return distances[to], findPath(g, distances, from, to)
 }
