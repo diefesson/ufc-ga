@@ -7,10 +7,11 @@ import (
 	"github.com/diefesson/ufc-ga/graph/algorithms"
 )
 
-func BellmanFordDemo() {
+func DijkstraDemo() {
 	cities := createDiCities()
+	dc := createDistanceCalculator(createCoordinates())
 	path := []int{}
-	distance, err := algorithms.BellmanFord(cities, 5, 1, createDistanceCalculator(createCoordinates()), graph.CollectVerticesInto(&path))
+	distance, err := algorithms.Dijkstra(cities, 5, 1, dc, graph.CollectVerticesInto(&path))
 	if err != nil {
 		panic(err)
 	}

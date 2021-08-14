@@ -8,10 +8,10 @@ import (
 )
 
 func BellmanFord(g *graph.DiGraph, from, to int, dc graph.DistanceCalculator, vp graph.VertexProcessor) (float64, error) {
-	sucessors := make([]int, g.Capacity())
+	successors := make([]int, g.Capacity())
 	distances := make([]float64, g.Capacity())
 	for i := 0; i < len(distances); i++ {
-		sucessors[i] = -1
+		successors[i] = -1
 		distances[i] = math.Inf(1)
 	}
 	distances[to] = 0
@@ -21,12 +21,12 @@ func BellmanFord(g *graph.DiGraph, from, to int, dc graph.DistanceCalculator, vp
 			newDistance := distances[t] + dc(g, f, t)
 			if newDistance < distances[f] {
 				distances[f] = newDistance
-				sucessors[f] = t
+				successors[f] = t
 			}
 		}))
 	}
 
-	if sucessors[from] == -1 {
+	if successors[from] == -1 {
 		return -1, errors.New("could not find shortest path")
 	}
 	for t := 0; t < g.Capacity(); t++ {
@@ -37,11 +37,9 @@ func BellmanFord(g *graph.DiGraph, from, to int, dc graph.DistanceCalculator, vp
 		}
 	}
 
-	v := from
-	for v != to {
+	for v := from; v != to; v = successors[v] {
 		vp(g, v)
-		v = sucessors[v]
 	}
-	vp(g, v)
+	vp(g, to)
 	return distances[from], nil
 }
