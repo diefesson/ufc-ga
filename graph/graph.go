@@ -23,13 +23,7 @@ type Graph interface {
 	GetEdgeDataLayer(key string) BDDataLayer
 	RemoveEdgeDataLayer(key string)
 	VerifyConnected() bool
-	setVisited(index int, visited bool)
-	isVisited(index int) bool
 	Clone() Graph
-}
-
-func clearVisited(g Graph) {
-	g.ForVertices(func(_ Graph, index int) { g.setVisited(index, false) })
 }
 
 func ForEdgesFrom(g Graph, from int, ep EdgeProcessor) {
@@ -79,17 +73,17 @@ func DepthFirst(g Graph, start int, down VertexProcessor, up VertexProcessor, ep
 	if ep == nil {
 		ep = EmptyEdgeProcessor
 	}
-	clearVisited(g)
-	depthFirst(g, start, down, up, ep)
+	visited := make([]bool, g.Capacity())
+	depthFirst(g, visited, start, down, up, ep)
 }
 
-func depthFirst(g Graph, index int, down VertexProcessor, up VertexProcessor, ep EdgeProcessor) {
-	g.setVisited(index, true)
+func depthFirst(g Graph, visited []bool, index int, down VertexProcessor, up VertexProcessor, ep EdgeProcessor) {
+	visited[index] = true
 	down(g, index)
 	ForNeighbours(g, index, func(g Graph, i int) {
-		if !g.isVisited(i) {
+		if !visited[i] {
 			ep(g, index, i)
-			depthFirst(g, i, down, up, ep)
+			depthFirst(g, visited, i, down, up, ep)
 		}
 	})
 	up(g, index)
@@ -99,21 +93,21 @@ func BreadthFirst(g Graph, start int, vp VertexProcessor) {
 	if vp == nil {
 		vp = EmptyVertexProcessor
 	}
-	clearVisited(g)
-	breadthFirst(g, start, vp)
+	visited := make([]bool, g.Capacity())
+	breadthFirst(g, visited, start, vp)
 }
 
-func breadthFirst(g Graph, start int, vp VertexProcessor) {
+func breadthFirst(g Graph, visited []bool, start int, vp VertexProcessor) {
 	nexts := list.New()
 	nexts.PushBack(start)
-	g.setVisited(start, true)
+	visited[start] = true
 	for e := nexts.Front(); e != nil; e = nexts.Front() {
 		index := e.Value.(int)
 		nexts.Remove(e)
 		vp(g, index)
 		ForNeighbours(g, index, func(g Graph, i int) {
-			if !g.isVisited(i) {
-				g.setVisited(i, true)
+			if !visited[i] {
+				visited[i] = true
 				nexts.PushBack(i)
 			}
 		})

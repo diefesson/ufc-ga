@@ -4,7 +4,6 @@ type baseGraph struct {
 	vertexCount   int
 	edgeCount     int
 	vertexPresent []bool
-	vertexVisited []bool
 	edgeConnected [][]bool
 	vertexLayers  map[string]*UDDataLayer
 	edgeLayers    map[string]BDDataLayer
@@ -13,7 +12,6 @@ type baseGraph struct {
 func makeBaseGraph(capacity int) baseGraph {
 	return baseGraph{
 		vertexPresent: make([]bool, capacity),
-		vertexVisited: make([]bool, capacity),
 		vertexLayers:  make(map[string]*UDDataLayer),
 		edgeLayers:    make(map[string]BDDataLayer),
 	}
@@ -93,14 +91,6 @@ func (g *baseGraph) GetEdgeDataLayer(key string) BDDataLayer {
 
 func (g *baseGraph) RemoveEdgeDataLayer(key string) {
 	delete(g.edgeLayers, key)
-}
-
-func (g *baseGraph) isVisited(index int) bool {
-	return g.vertexVisited[index]
-}
-
-func (g *baseGraph) setVisited(index int, visited bool) {
-	g.vertexVisited[index] = visited
 }
 
 func transferBaseData(to, from *baseGraph) {
