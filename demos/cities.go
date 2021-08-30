@@ -38,6 +38,20 @@ func createDiCities() *graph.DiGraph {
 	return cities
 }
 
+func createBandwidths(cities graph.Graph) [][]float64 {
+	bandwidths := make([][]float64, cities.Capacity())
+	for i := range bandwidths {
+		bandwidths[i] = make([]float64, cities.Capacity())
+	}
+	bandwidths[0][1] = 3
+	bandwidths[5][3] = 3
+	bandwidths[3][2] = 1
+	bandwidths[3][4] = 3
+	bandwidths[2][1] = 2
+	bandwidths[4][1] = 3
+	return bandwidths
+}
+
 func createDistanceCalculator(coordinates *graph.UDDataLayer) graph.DistanceCalculator {
 	return func(_ graph.Graph, from, to int) float64 {
 		fc := coordinates.Get(from).(city)

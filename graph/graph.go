@@ -2,6 +2,7 @@ package graph
 
 import (
 	"container/list"
+	"errors"
 )
 
 type Graph interface {
@@ -112,6 +113,48 @@ func breadthFirst(g Graph, visited []bool, start int, vp VertexProcessor) {
 			}
 		})
 	}
+}
+
+func BreadthFirstSearch(g Graph, start, end int, ef EdgeFilter, vp VertexProcessor) error {
+	if ef == nil {
+		ef = Graph.IsConnected
+	}
+	if vp == nil {
+		vp = EmptyVertexProcessor
+	}
+	return breadthFirstSearch(g, start, end, ef, vp)
+}
+
+func breadthFirstSearch(g Graph, start, end int, ef EdgeFilter, vp VertexProcessor) error {
+	sucessor := make([]int, g.Capacity())
+	for i := range sucessor {
+		sucessor[i] = -1
+	}
+	queue := list.New()
+	queue.PushBack(end)
+	sucessor[end] = end
+mainLoop:
+	for e := queue.Front(); e != nil; e = queue.Front() {
+		v := e.Value.(int)
+		queue.Remove(e)
+		for n := 0; n < g.Capacity(); n++ {
+			if sucessor[n] == -1 && ef(g, n, v) {
+				sucessor[n] = v
+				if n == start {
+					break mainLoop
+				}
+				queue.PushBack(n)
+			}
+		}
+	}
+	if sucessor[start] == -1 {
+		return errors.New("could not find path")
+	}
+	for v := start; v != sucessor[v]; v = sucessor[v] {
+		vp(g, v)
+	}
+	vp(g, end)
+	return nil
 }
 
 func IsConnectedFrom(g Graph, start int) bool {

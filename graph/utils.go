@@ -11,3 +11,9 @@ func PrintGraph(g Graph) {
 	g.ForVertices(PrintVertex)
 	g.ForEdges(PrintEdge)
 }
+
+func ForPathEdges(path []int, f func(f int, t int)) {
+	for i := 0; i < len(path)-1; i++ {
+		f(path[i], path[i+1])
+	}
+}

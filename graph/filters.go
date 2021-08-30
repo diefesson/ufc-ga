@@ -4,6 +4,14 @@ type VertexFilter func(g Graph, index int) bool
 
 type EdgeFilter func(g Graph, from, to int) bool
 
+func PassVertexFilter(g Graph, index int) bool {
+	return true
+}
+
+func PassEdgeFilter(g Graph, from, to int) bool {
+	return true
+}
+
 func IfPresent(vp VertexProcessor) VertexProcessor {
 	return func(g Graph, index int) {
 		if g.IsPresent(index) {
